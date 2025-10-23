@@ -1,8 +1,8 @@
 ### Agents.md - Best Practices for QuaderGenerator Plugin
 
-This document outlines best practices for developing, maintaining, and extending the **QuaderGenerator** Rhino plugin. It adheres to Rhino Developer Docs (Rhino 8, .NET 7, as of October 2025). Keep this file up-to-date via Git commits. 
+> **Note:** This document is specifically designed for AI agents and developers working on this project. For general information, see [README.md](README.md). For user documentation, see [Usage.md](Usage.md).
 
-**📖 For user documentation, see [Usage.md](Usage.md)**
+This document outlines best practices for developing, maintaining, and extending the **QuaderGenerator** Rhino plugin. It adheres to Rhino Developer Docs (Rhino 8, .NET 7, as of October 2025). Keep this file up-to-date via Git commits.
 
 ## 1. Setup & Development Environment
 - **Tools**:
