@@ -1,6 +1,6 @@
 ---
 name: QuaderGenerator
-version: 1.0
+version: 1.0+b68f3d847dcbb6f4edad164bc5434561912aef8c
 authors:
 - QuaderGenerator Authors
 description: Description of QuaderGenerator

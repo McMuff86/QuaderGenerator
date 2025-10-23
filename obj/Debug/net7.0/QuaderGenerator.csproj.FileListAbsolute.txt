@@ -20,3 +20,4 @@ C:\Users\Adi.Muff\source\repos\QuaderGenerator\obj\Debug\net7.0\ref\QuaderGenera
 C:\Users\Adi.Muff\source\repos\QuaderGenerator\bin\Debug\net7.0\System.Text.Encodings.Web.dll
 C:\Users\Adi.Muff\source\repos\QuaderGenerator\bin\Debug\net7.0\System.Text.Json.dll
 C:\Users\Adi.Muff\source\repos\QuaderGenerator\bin\Debug\net7.0\runtimes\browser\lib\net7.0\System.Text.Encodings.Web.dll
+C:\Users\Adi.Muff\source\repos\QuaderGenerator\obj\Debug\net7.0\QuaderGenerator.sourcelink.json

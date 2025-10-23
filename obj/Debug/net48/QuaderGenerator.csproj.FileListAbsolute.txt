@@ -19,3 +19,4 @@ C:\Users\Adi.Muff\source\repos\QuaderGenerator\bin\Debug\net48\System.Text.Encod
 C:\Users\Adi.Muff\source\repos\QuaderGenerator\bin\Debug\net48\System.Text.Json.dll
 C:\Users\Adi.Muff\source\repos\QuaderGenerator\bin\Debug\net48\System.Threading.Tasks.Extensions.dll
 C:\Users\Adi.Muff\source\repos\QuaderGenerator\bin\Debug\net48\System.ValueTuple.dll
+C:\Users\Adi.Muff\source\repos\QuaderGenerator\obj\Debug\net48\QuaderGenerator.sourcelink.json

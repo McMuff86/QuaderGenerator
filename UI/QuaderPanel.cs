@@ -53,6 +53,9 @@ namespace QuaderGenerator.UI
         // Object info display
         private Label _objectInfoLabel;
         private Button _refreshInfoButton;
+        private Button _generateCentroidButton;
+        private Scrollable _objectInfoScrollable;
+        private Rhino.DocObjects.RhinoObject _currentSelectedObject;
 
         public QuaderPanel()
         {
@@ -127,8 +130,20 @@ namespace QuaderGenerator.UI
                 TextColor = Colors.Gray,
                 Wrap = WrapMode.Word
             };
+            
+            // Make label scrollable
+            _objectInfoScrollable = new Scrollable
+            {
+                Content = _objectInfoLabel,
+                Border = BorderType.Line,
+                Size = new Size(-1, 200) // Fixed height, width auto
+            };
+            
             _refreshInfoButton = new Button { Text = "Refresh Info" };
             _refreshInfoButton.Click += OnRefreshInfo;
+            
+            _generateCentroidButton = new Button { Text = "Generate Centroid", Enabled = false };
+            _generateCentroidButton.Click += OnGenerateCentroid;
             
             // Load presets
             LoadPresets();
@@ -189,14 +204,29 @@ namespace QuaderGenerator.UI
             mainLayout.AddSpace();
             var infoGroup = new GroupBox { Text = "Selected Object Info" };
             var infoLayout = new DynamicLayout { Padding = 5, Spacing = new Size(5, 5) };
-            infoLayout.AddRow(_objectInfoLabel);
-            infoLayout.AddRow(_refreshInfoButton);
+            infoLayout.AddRow(_objectInfoScrollable); // Scrollable container instead of label directly
+            
+            // Button row
+            var infoButtonLayout = new DynamicLayout { Spacing = new Size(5, 5) };
+            infoButtonLayout.BeginHorizontal();
+            infoButtonLayout.Add(_refreshInfoButton);
+            infoButtonLayout.Add(_generateCentroidButton);
+            infoButtonLayout.EndHorizontal();
+            infoLayout.AddRow(infoButtonLayout);
+            
             infoGroup.Content = infoLayout;
             mainLayout.AddRow(infoGroup);
 
             mainLayout.Add(null); // Stretch remaining space
 
-            Content = mainLayout;
+            // Make entire panel scrollable
+            var scrollablePanel = new Scrollable
+            {
+                Content = mainLayout,
+                Border = BorderType.None
+            };
+
+            Content = scrollablePanel;
             
             // Initialize with dimensions mode
             UpdateInputFields();
@@ -727,6 +757,9 @@ namespace QuaderGenerator.UI
                 if (doc == null)
                 {
                     _objectInfoLabel.Text = "No active document";
+                    _objectInfoLabel.TextColor = Colors.Gray;
+                    _currentSelectedObject = null;
+                    _generateCentroidButton.Enabled = false;
                     return;
                 }
 
@@ -736,25 +769,56 @@ namespace QuaderGenerator.UI
                 {
                     _objectInfoLabel.Text = "No object selected\nSelect an object and click Refresh Info";
                     _objectInfoLabel.TextColor = Colors.Gray;
+                    _currentSelectedObject = null;
+                    _generateCentroidButton.Enabled = false;
                     return;
                 }
 
+                // Handle multiple selected objects
                 if (selectedObjects.Length > 1)
                 {
-                    _objectInfoLabel.Text = $"{selectedObjects.Length} objects selected\nSelect only one object for detailed info";
+                    var infoBuilder = new System.Text.StringBuilder();
+                    infoBuilder.AppendLine($"═══════════════════════════");
+                    infoBuilder.AppendLine($"  {selectedObjects.Length} OBJECTS SELECTED");
+                    infoBuilder.AppendLine($"═══════════════════════════");
+                    infoBuilder.AppendLine();
+
+                    for (int i = 0; i < selectedObjects.Length; i++)
+                    {
+                        infoBuilder.AppendLine($"┌─── OBJECT {i + 1}/{selectedObjects.Length} ───┐");
+                        infoBuilder.AppendLine(GetObjectInfo(selectedObjects[i]));
+                        
+                        if (i < selectedObjects.Length - 1)
+                        {
+                            infoBuilder.AppendLine();
+                            infoBuilder.AppendLine("─────────────────────────────");
+                            infoBuilder.AppendLine();
+                        }
+                    }
+
+                    _objectInfoLabel.Text = infoBuilder.ToString();
                     _objectInfoLabel.TextColor = Colors.Orange;
+                    _currentSelectedObject = null;
+                    _generateCentroidButton.Enabled = false;
+                    _generateCentroidButton.Text = "Generate Centroid (Select 1)";
                     return;
                 }
 
+                // Single object selected
                 var obj = selectedObjects[0];
+                _currentSelectedObject = obj;
                 var info = GetObjectInfo(obj);
                 _objectInfoLabel.Text = info;
                 _objectInfoLabel.TextColor = Colors.LightGreen;
+                _generateCentroidButton.Enabled = true;
+                _generateCentroidButton.Text = "Generate Centroid";
             }
             catch (Exception ex)
             {
                 _objectInfoLabel.Text = $"Error: {ex.Message}";
                 _objectInfoLabel.TextColor = Colors.Red;
+                _currentSelectedObject = null;
+                _generateCentroidButton.Enabled = false;
                 RhinoApp.WriteLine($"ERROR: Failed to get object info: {ex.Message}");
             }
         }
@@ -763,9 +827,107 @@ namespace QuaderGenerator.UI
         {
             var info = new System.Text.StringBuilder();
             var unitSymbol = UnitConverter.GetUnitSymbol(_currentUnit);
+            var doc = RhinoDoc.ActiveDoc;
+            
+            // ═══ BASIC INFO ═══
+            info.AppendLine("═══ OBJECT INFO ═══");
+            info.AppendLine($"ID: {obj.Id}");
+            
+            // Name
+            if (!string.IsNullOrEmpty(obj.Name))
+            {
+                info.AppendLine($"Name: {obj.Name}");
+            }
+            else
+            {
+                info.AppendLine("Name: (none)");
+            }
             
             info.AppendLine($"Type: {obj.ObjectType}");
-            info.AppendLine($"Layer: {obj.Attributes.LayerIndex}");
+            
+            // Layer
+            if (doc != null && obj.Attributes.LayerIndex >= 0 && obj.Attributes.LayerIndex < doc.Layers.Count)
+            {
+                var layer = doc.Layers[obj.Attributes.LayerIndex];
+                info.AppendLine($"Layer: {layer.Name} (Index: {obj.Attributes.LayerIndex})");
+            }
+            else
+            {
+                info.AppendLine($"Layer: Index {obj.Attributes.LayerIndex}");
+            }
+            
+            // Color
+            if (obj.Attributes.ColorSource == Rhino.DocObjects.ObjectColorSource.ColorFromObject)
+            {
+                var color = obj.Attributes.ObjectColor;
+                info.AppendLine($"Color: RGB({color.R},{color.G},{color.B})");
+            }
+            else if (obj.Attributes.ColorSource == Rhino.DocObjects.ObjectColorSource.ColorFromLayer)
+            {
+                info.AppendLine("Color: From Layer");
+            }
+            
+            // Material
+            if (obj.Attributes.MaterialSource == Rhino.DocObjects.ObjectMaterialSource.MaterialFromObject)
+            {
+                if (doc != null && obj.Attributes.MaterialIndex >= 0 && obj.Attributes.MaterialIndex < doc.Materials.Count)
+                {
+                    var material = doc.Materials[obj.Attributes.MaterialIndex];
+                    var matName = string.IsNullOrEmpty(material.Name) ? $"Material {obj.Attributes.MaterialIndex}" : material.Name;
+                    info.AppendLine($"Material: {matName}");
+                }
+                else
+                {
+                    info.AppendLine($"Material: Index {obj.Attributes.MaterialIndex}");
+                }
+            }
+            else if (obj.Attributes.MaterialSource == Rhino.DocObjects.ObjectMaterialSource.MaterialFromLayer)
+            {
+                info.AppendLine("Material: From Layer");
+            }
+            else
+            {
+                info.AppendLine("Material: (none)");
+            }
+            
+            // Status
+            info.AppendLine($"Locked: {(obj.IsLocked ? "Yes" : "No")}");
+            info.AppendLine($"Hidden: {(obj.IsHidden ? "Yes" : "No")}");
+            
+            // Groups (with detailed information)
+            var groupIndices = obj.Attributes.GetGroupList();
+            if (groupIndices != null && groupIndices.Length > 0)
+            {
+                info.AppendLine($"Groups: {groupIndices.Length}");
+                if (doc != null)
+                {
+                    foreach (var groupIndex in groupIndices)
+                    {
+                        var group = doc.Groups.FindIndex(groupIndex);
+                        if (group != null)
+                        {
+                            var groupName = group.Name;
+                            if (string.IsNullOrEmpty(groupName))
+                            {
+                                info.AppendLine($"  • Group {groupIndex} (Unnamed)");
+                            }
+                            else
+                            {
+                                info.AppendLine($"  • Group {groupIndex}: {groupName}");
+                            }
+                        }
+                        else
+                        {
+                            info.AppendLine($"  • Group {groupIndex}");
+                        }
+                    }
+                }
+            }
+            else
+            {
+                info.AppendLine("Groups: None");
+            }
+            
             info.AppendLine();
 
             // Get geometry
@@ -871,7 +1033,44 @@ namespace QuaderGenerator.UI
                 // Length
                 double lengthMm = curve.GetLength();
                 double lengthInUnit = UnitConverter.FromMillimeters(lengthMm, _currentUnit);
-                info.AppendLine($"Length: {lengthInUnit:F3} {unitSymbol}");
+                info.AppendLine($"Total Length: {lengthInUnit:F3} {unitSymbol}");
+                
+                // Check if PolyCurve (multiple segments)
+                if (curve is Rhino.Geometry.PolyCurve polyCurve)
+                {
+                    int segmentCount = polyCurve.SegmentCount;
+                    info.AppendLine($"Segments: {segmentCount}");
+                    
+                    // Show individual segment lengths
+                    if (segmentCount > 0 && segmentCount <= 20) // Limit to 20 to avoid too much output
+                    {
+                        info.AppendLine("Segment Lengths:");
+                        for (int i = 0; i < segmentCount; i++)
+                        {
+                            var segment = polyCurve.SegmentCurve(i);
+                            if (segment != null)
+                            {
+                                double segLengthMm = segment.GetLength();
+                                double segLengthUnit = UnitConverter.FromMillimeters(segLengthMm, _currentUnit);
+                                
+                                // Get segment type
+                                string segType = "Curve";
+                                if (segment.IsLinear())
+                                    segType = "Line";
+                                else if (segment is Rhino.Geometry.ArcCurve)
+                                    segType = "Arc";
+                                else if (segment is Rhino.Geometry.NurbsCurve)
+                                    segType = "NURBS";
+                                
+                                info.AppendLine($"  [{i + 1}] {segType}: {segLengthUnit:F3} {unitSymbol}");
+                            }
+                        }
+                    }
+                    else if (segmentCount > 20)
+                    {
+                        info.AppendLine($"  (Too many segments to display: {segmentCount})");
+                    }
+                }
                 
                 // Degree
                 if (curve is Rhino.Geometry.NurbsCurve nurbsCurve)
@@ -948,8 +1147,199 @@ namespace QuaderGenerator.UI
                 info.AppendLine($"Geometry type not fully supported");
                 info.AppendLine($"Type: {geom.GetType().Name}");
             }
+            
+            // ═══ BOUNDING BOX ═══
+            info.AppendLine();
+            info.AppendLine("═══ BOUNDING BOX ═══");
+            var bbox = obj.Geometry.GetBoundingBox(true);
+            if (bbox.IsValid)
+            {
+                var minPt = bbox.Min;
+                var maxPt = bbox.Max;
+                var centerPt = bbox.Center;
+                
+                var minX = UnitConverter.FromMillimeters(minPt.X, _currentUnit);
+                var minY = UnitConverter.FromMillimeters(minPt.Y, _currentUnit);
+                var minZ = UnitConverter.FromMillimeters(minPt.Z, _currentUnit);
+                var maxX = UnitConverter.FromMillimeters(maxPt.X, _currentUnit);
+                var maxY = UnitConverter.FromMillimeters(maxPt.Y, _currentUnit);
+                var maxZ = UnitConverter.FromMillimeters(maxPt.Z, _currentUnit);
+                var cenX = UnitConverter.FromMillimeters(centerPt.X, _currentUnit);
+                var cenY = UnitConverter.FromMillimeters(centerPt.Y, _currentUnit);
+                var cenZ = UnitConverter.FromMillimeters(centerPt.Z, _currentUnit);
+                
+                info.AppendLine($"Min: ({minX:F3}, {minY:F3}, {minZ:F3}) {unitSymbol}");
+                info.AppendLine($"Max: ({maxX:F3}, {maxY:F3}, {maxZ:F3}) {unitSymbol}");
+                info.AppendLine($"Center: ({cenX:F3}, {cenY:F3}, {cenZ:F3}) {unitSymbol}");
+                
+                var dx = UnitConverter.FromMillimeters(maxPt.X - minPt.X, _currentUnit);
+                var dy = UnitConverter.FromMillimeters(maxPt.Y - minPt.Y, _currentUnit);
+                var dz = UnitConverter.FromMillimeters(maxPt.Z - minPt.Z, _currentUnit);
+                info.AppendLine($"Size: {dx:F3} × {dy:F3} × {dz:F3} {unitSymbol}");
+            }
+            
+            // ═══ USER TEXT ═══
+            var userStrings = obj.Attributes.GetUserStrings();
+            if (userStrings != null && userStrings.Count > 0)
+            {
+                info.AppendLine();
+                info.AppendLine("═══ USER TEXT ═══");
+                foreach (var key in userStrings.AllKeys)
+                {
+                    var value = userStrings.Get(key);
+                    info.AppendLine($"{key}: {value}");
+                }
+            }
 
             return info.ToString();
+        }
+
+        private void OnGenerateCentroid(object sender, EventArgs e)
+        {
+            try
+            {
+                if (_currentSelectedObject == null)
+                {
+                    _statusLabel.Text = "Error: No object selected";
+                    return;
+                }
+
+                var doc = RhinoDoc.ActiveDoc;
+                if (doc == null)
+                {
+                    _statusLabel.Text = "Error: No active document";
+                    return;
+                }
+
+                var geom = _currentSelectedObject.Geometry;
+                Rhino.Geometry.Point3d centroid = Rhino.Geometry.Point3d.Unset;
+                string centroidType = "";
+
+                // Calculate centroid based on geometry type
+                if (geom is Rhino.Geometry.Brep brep)
+                {
+                    if (brep.IsSolid)
+                    {
+                        // Volume centroid for solids
+                        var volumeProps = Rhino.Geometry.VolumeMassProperties.Compute(brep);
+                        if (volumeProps != null)
+                        {
+                            centroid = volumeProps.Centroid;
+                            centroidType = "Volume Centroid";
+                        }
+                    }
+                    else
+                    {
+                        // Area centroid for surfaces
+                        var areaProps = Rhino.Geometry.AreaMassProperties.Compute(brep);
+                        if (areaProps != null)
+                        {
+                            centroid = areaProps.Centroid;
+                            centroidType = "Surface Centroid";
+                        }
+                    }
+                }
+                else if (geom is Rhino.Geometry.Extrusion extrusion)
+                {
+                    var brepForm = extrusion.ToBrep();
+                    if (brepForm != null && brepForm.IsSolid)
+                    {
+                        var volumeProps = Rhino.Geometry.VolumeMassProperties.Compute(brepForm);
+                        if (volumeProps != null)
+                        {
+                            centroid = volumeProps.Centroid;
+                            centroidType = "Volume Centroid";
+                        }
+                    }
+                }
+                else if (geom is Rhino.Geometry.Surface surface)
+                {
+                    var brepForm = surface.ToBrep();
+                    if (brepForm != null)
+                    {
+                        var areaProps = Rhino.Geometry.AreaMassProperties.Compute(brepForm);
+                        if (areaProps != null)
+                        {
+                            centroid = areaProps.Centroid;
+                            centroidType = "Surface Centroid";
+                        }
+                    }
+                }
+                else if (geom is Rhino.Geometry.Curve curve)
+                {
+                    // Curve centroid (center of mass along curve)
+                    var curveProps = Rhino.Geometry.AreaMassProperties.Compute(curve);
+                    if (curveProps != null)
+                    {
+                        centroid = curveProps.Centroid;
+                        centroidType = "Curve Centroid";
+                    }
+                }
+                else if (geom is Rhino.Geometry.Mesh mesh)
+                {
+                    if (mesh.IsClosed)
+                    {
+                        var volumeProps = Rhino.Geometry.VolumeMassProperties.Compute(mesh);
+                        if (volumeProps != null)
+                        {
+                            centroid = volumeProps.Centroid;
+                            centroidType = "Volume Centroid";
+                        }
+                    }
+                    else
+                    {
+                        var areaProps = Rhino.Geometry.AreaMassProperties.Compute(mesh);
+                        if (areaProps != null)
+                        {
+                            centroid = areaProps.Centroid;
+                            centroidType = "Surface Centroid";
+                        }
+                    }
+                }
+
+                // Add centroid point to document
+                if (centroid.IsValid)
+                {
+                    var undoRecord = doc.BeginUndoRecord("Add Centroid Point");
+                    var pointId = doc.Objects.AddPoint(centroid);
+                    doc.EndUndoRecord(undoRecord);
+
+                    if (pointId != Guid.Empty)
+                    {
+                        doc.Views.Redraw();
+                        
+                        var centroidDisplay = new Rhino.Geometry.Point3d(
+                            UnitConverter.FromMillimeters(centroid.X, _currentUnit),
+                            UnitConverter.FromMillimeters(centroid.Y, _currentUnit),
+                            UnitConverter.FromMillimeters(centroid.Z, _currentUnit)
+                        );
+                        
+                        var unitSymbol = UnitConverter.GetUnitSymbol(_currentUnit);
+                        _statusLabel.Text = $"✓ {centroidType} created";
+                        
+                        RhinoApp.WriteLine($"━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+                        RhinoApp.WriteLine($"{centroidType} generated:");
+                        RhinoApp.WriteLine($"  Position (mm): ({centroid.X:F3}, {centroid.Y:F3}, {centroid.Z:F3})");
+                        RhinoApp.WriteLine($"  Position ({unitSymbol}): ({centroidDisplay.X:F3}, {centroidDisplay.Y:F3}, {centroidDisplay.Z:F3})");
+                        RhinoApp.WriteLine($"  Point ID: {pointId}");
+                        RhinoApp.WriteLine($"━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+                    }
+                    else
+                    {
+                        _statusLabel.Text = "Error: Failed to create centroid point";
+                    }
+                }
+                else
+                {
+                    _statusLabel.Text = "Error: Could not calculate centroid";
+                    RhinoApp.WriteLine("ERROR: Centroid calculation failed for this geometry type");
+                }
+            }
+            catch (Exception ex)
+            {
+                _statusLabel.Text = $"Error: {ex.Message}";
+                RhinoApp.WriteLine($"ERROR: Failed to generate centroid: {ex.Message}");
+            }
         }
 
         #endregion
