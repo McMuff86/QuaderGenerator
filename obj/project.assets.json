@@ -916,13 +916,13 @@
     "C:\\Users\\adrian.muff\\.nuget\\packages\\": {}
   },
   "project": {
-    "version": "1.0.0",
+    "version": "1.1.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\adrian.muff\\source\\repos\\work\\quadergenerator\\QuaderGenerator.csproj",
+      "projectUniqueName": "C:\\Users\\adrian.muff\\source\\repos\\work\\QuaderGenerator\\QuaderGenerator.csproj",
       "projectName": "QuaderGenerator",
-      "projectPath": "C:\\Users\\adrian.muff\\source\\repos\\work\\quadergenerator\\QuaderGenerator.csproj",
+      "projectPath": "C:\\Users\\adrian.muff\\source\\repos\\work\\QuaderGenerator\\QuaderGenerator.csproj",
       "packagesPath": "C:\\Users\\adrian.muff\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\adrian.muff\\source\\repos\\work\\quadergenerator\\obj\\",
+      "outputPath": "C:\\Users\\adrian.muff\\source\\repos\\work\\QuaderGenerator\\obj\\",
       "projectStyle": "PackageReference",
       "crossTargeting": true,
       "configFilePaths": [

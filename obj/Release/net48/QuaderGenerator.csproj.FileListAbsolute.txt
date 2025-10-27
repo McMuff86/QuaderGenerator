@@ -1,0 +1,6 @@
+C:\Users\adrian.muff\source\repos\work\QuaderGenerator\obj\Release\net48\QuaderGenerator.csproj.AssemblyReference.cache
+C:\Users\adrian.muff\source\repos\work\QuaderGenerator\obj\Release\net48\QuaderGenerator.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\adrian.muff\source\repos\work\QuaderGenerator\obj\Release\net48\QuaderGenerator.AssemblyInfoInputs.cache
+C:\Users\adrian.muff\source\repos\work\QuaderGenerator\obj\Release\net48\QuaderGenerator.AssemblyInfo.cs
+C:\Users\adrian.muff\source\repos\work\QuaderGenerator\obj\Release\net48\QuaderGenerator.csproj.CoreCompileInputs.cache
+C:\Users\adrian.muff\source\repos\work\QuaderGenerator\obj\Release\net48\QuaderGenerator.sourcelink.json

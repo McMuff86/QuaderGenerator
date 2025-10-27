@@ -8,10 +8,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- ✅ Icon integration (plugin-utility.ico)
+- ✅ Icon integration (plugin-utility.ico) - Icon wird jetzt als Datei kopiert
 - ✅ Extended default presets (added 1m² and 5m² surface area boxes)
-- ✅ Fixed Object Info Box scrollbar issues (auto-expanding height)
-- ✅ Updated documentation (README.md, Usage.md)
+- ✅ Fixed Object Info Box scrollbar issues (fixed height of 300px)
+- ✅ Enhanced UI with Enter key support for generation
+- ✅ Improved status messages with visual feedback
+- ✅ Updated documentation (README.md, Usage.md, CHANGELOG.md)
+- ✅ Unit test framework setup (xUnit structure created)
 
 ### Planned
 - Unit tests with xUnit
@@ -19,6 +22,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Custom placement (not just origin)
 - Export presets as JSON
 - Material assignment
+
+---
+
+## [1.1.0] - 2025-10-27
+
+### Added
+- ✅ Enhanced UI with Enter key shortcuts for generation
+- ✅ Improved Object Info Box with fixed-height scrolling (300px)
+- ✅ Extended default presets (7 total: added 1m² and 5m² surface area boxes)
+- ✅ Icon integration - plugin-utility.ico now properly embedded
+- ✅ Better status messages with visual feedback (✓ indicators)
+- ✅ Command toggle functionality (open/close panel)
+
+### Technical
+- Updated build configuration for icon handling
+- Improved Eto.Forms Scrollable implementation
+- Enhanced user experience with keyboard shortcuts
 
 ---
 

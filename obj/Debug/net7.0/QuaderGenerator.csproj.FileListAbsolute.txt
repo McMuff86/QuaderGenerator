@@ -44,3 +44,4 @@ C:\Users\adrian.muff\source\repos\work\quadergenerator\obj\Debug\net7.0\refint\Q
 C:\Users\adrian.muff\source\repos\work\quadergenerator\obj\Debug\net7.0\QuaderGenerator.pdb
 C:\Users\adrian.muff\source\repos\work\quadergenerator\obj\Debug\net7.0\QuaderGenerator.genruntimeconfig.cache
 C:\Users\adrian.muff\source\repos\work\quadergenerator\obj\Debug\net7.0\ref\QuaderGenerator.rhp
+C:\Users\adrian.muff\source\repos\work\QuaderGenerator\bin\Debug\net7.0\EmbeddedResources\plugin-utility.ico

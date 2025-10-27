@@ -42,3 +42,4 @@ C:\Users\adrian.muff\source\repos\work\quadergenerator\obj\Debug\net48\QuaderGen
 C:\Users\adrian.muff\source\repos\work\quadergenerator\obj\Debug\net48\QuaderGe.BF87764A.Up2Date
 C:\Users\adrian.muff\source\repos\work\quadergenerator\obj\Debug\net48\QuaderGenerator.rhp
 C:\Users\adrian.muff\source\repos\work\quadergenerator\obj\Debug\net48\QuaderGenerator.pdb
+C:\Users\adrian.muff\source\repos\work\QuaderGenerator\bin\Debug\net48\EmbeddedResources\plugin-utility.ico
