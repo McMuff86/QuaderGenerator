@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyDescriptionAttribute("Description of QuaderGenerator")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0+b68f3d847dcbb6f4edad164bc5434561912aef8c")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0+6b05d38dd85798066c67e573be1928edf867cbcf")]
 [assembly: System.Reflection.AssemblyProductAttribute("QuaderGenerator")]
 [assembly: System.Reflection.AssemblyTitleAttribute("QuaderGenerator")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

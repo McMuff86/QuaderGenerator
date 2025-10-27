@@ -136,7 +136,8 @@ namespace QuaderGenerator.UI
             {
                 Content = _objectInfoLabel,
                 Border = BorderType.Line,
-                Size = new Size(-1, 200) // Fixed height, width auto
+                ExpandContentHeight = false,
+                ExpandContentWidth = true
             };
             
             _refreshInfoButton = new Button { Text = "Refresh Info" };
@@ -204,6 +205,9 @@ namespace QuaderGenerator.UI
             mainLayout.AddSpace();
             var infoGroup = new GroupBox { Text = "Selected Object Info" };
             var infoLayout = new DynamicLayout { Padding = 5, Spacing = new Size(5, 5) };
+            
+            // Set scrollable height to fill available space with minimum
+            _objectInfoScrollable.Height = 250;
             infoLayout.AddRow(_objectInfoScrollable); // Scrollable container instead of label directly
             
             // Button row
