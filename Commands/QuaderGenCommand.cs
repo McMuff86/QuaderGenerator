@@ -27,11 +27,13 @@ namespace QuaderGenerator.Commands
             if (!visible)
             {
                 Panels.OpenPanel(panelId);
-                RhinoApp.WriteLine("Quader Generator panel opened.");
+                RhinoApp.WriteLine("QuaderGenerator: Panel opened successfully.");
+                RhinoApp.WriteLine("Use QuaderGen command again to toggle panel visibility.");
             }
             else
             {
-                RhinoApp.WriteLine("Quader Generator panel is already open.");
+                Panels.ClosePanel(panelId);
+                RhinoApp.WriteLine("QuaderGenerator: Panel closed. Use QuaderGen command to reopen.");
             }
 
             return Result.Success;

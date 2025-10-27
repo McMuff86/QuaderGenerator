@@ -154,7 +154,13 @@ namespace QuaderGenerator.Core
                 new QuaderPreset("Box 2×1.5×0.5m", "dimensions", "m", 2, 1.5, 0.5, 0, 0),
                 
                 // 100m² surface area: 5m × 5m box
-                new QuaderPreset("Surface 100m²", "surface", "m", 5, 5, 0, 0, 100)
+                new QuaderPreset("Surface 100m²", "surface", "m", 5, 5, 0, 0, 100),
+
+                // 1m² surface area: 1m × 0.2m × 0.15m box (surface area = 2(0.2 + 0.15 + 0.15) = 1m²)
+                new QuaderPreset("Surface 1m²", "surface", "m", 1, 0.2, 0.15, 0, 1),
+
+                // 5m² surface area: 2m × 1m × 0.15m box (surface area = 2(2 + 0.3 + 0.15) = 4.9m² ≈ 5m²)
+                new QuaderPreset("Surface 5m²", "surface", "m", 2, 1, 0.15, 0, 5)
             };
         }
     }

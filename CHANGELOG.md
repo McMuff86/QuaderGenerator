@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- ✅ Icon integration (plugin-utility.ico)
+- ✅ Extended default presets (added 1m² and 5m² surface area boxes)
+- ✅ Fixed Object Info Box scrollbar issues (auto-expanding height)
+- ✅ Updated documentation (README.md, Usage.md)
+
 ### Planned
 - Unit tests with xUnit
 - Batch generation mode

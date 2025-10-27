@@ -24,7 +24,7 @@ A powerful Rhino plugin for generating box (Quader) geometry with advanced calcu
 
 ### 💾 Preset Management
 - **Save & Load:** Store frequently used configurations
-- **5 Default Presets:** Including 1m³ cube, 7m³ cube, and more
+- **7 Default Presets:** Including 1m³ cube, 7m³ cube, surface area boxes, and more
 - **Unit-Aware:** Each preset remembers its unit
 
 ### 🔍 Object Analysis

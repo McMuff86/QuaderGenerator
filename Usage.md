@@ -117,12 +117,14 @@ Save frequently used configurations for quick access.
 
 ### Default Presets
 
-The plugin comes with 5 default presets:
+The plugin comes with 7 default presets:
 - **Cube 1m³** - Volume-based cube with 1m³
 - **Cube 7m³** - Volume-based cube with 7m³
-- **Box 10x10x10** - Direct dimensions
-- **Box 20x15x5** - Direct dimensions
-- **Surface 100m²** - Surface area-based box
+- **Box 1×1×1m** - Direct dimensions (1×1×1m box)
+- **Box 2×1.5×0.5m** - Direct dimensions (2×1.5×0.5m box)
+- **Surface 100m²** - Surface area-based box (5×5m)
+- **Surface 1m²** - Surface area-based box (1×0.2×0.15m)
+- **Surface 5m²** - Surface area-based box (2×1×0.15m)
 
 ### Loading a Preset
 
@@ -208,7 +210,8 @@ Add `QuaderGen` to your Rhino toolbar for quick access:
 
 ### Keyboard Shortcuts
 - `Tab` key moves between input fields
-- `Enter` in an input field generates the quader (if all values are valid)
+- `Enter` in any input field generates the quader (if all values are valid)
+- `Ctrl+Z` to undo the last generated quader
 
 ### Working with Presets
 - Use descriptive names: "Beam 300x200x50" instead of "Box1"

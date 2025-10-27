@@ -34,6 +34,10 @@
     <EmbeddedResource Remove="RH_DB_Panel\**" />
     <None Remove="RH_DB_Panel\**" />
   </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="EmbeddedResources\plugin-utility.ico" />
+  </ItemGroup>
   
   <Target Name="BuildYakPackage" AfterTargets="DispatchToInnerBuilds">
     <PropertyGroup>

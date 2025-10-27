@@ -1,25 +1,21 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Adi.Muff\\source\\repos\\QuaderGenerator\\QuaderGenerator.csproj": {}
+    "C:\\Users\\adrian.muff\\source\\repos\\work\\QuaderGenerator\\QuaderGenerator.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Adi.Muff\\source\\repos\\QuaderGenerator\\QuaderGenerator.csproj": {
+    "C:\\Users\\adrian.muff\\source\\repos\\work\\QuaderGenerator\\QuaderGenerator.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Adi.Muff\\source\\repos\\QuaderGenerator\\QuaderGenerator.csproj",
+        "projectUniqueName": "C:\\Users\\adrian.muff\\source\\repos\\work\\QuaderGenerator\\QuaderGenerator.csproj",
         "projectName": "QuaderGenerator",
-        "projectPath": "C:\\Users\\Adi.Muff\\source\\repos\\QuaderGenerator\\QuaderGenerator.csproj",
-        "packagesPath": "C:\\Users\\Adi.Muff\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Adi.Muff\\source\\repos\\QuaderGenerator\\obj\\",
+        "projectPath": "C:\\Users\\adrian.muff\\source\\repos\\work\\QuaderGenerator\\QuaderGenerator.csproj",
+        "packagesPath": "C:\\Users\\adrian.muff\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\adrian.muff\\source\\repos\\work\\QuaderGenerator\\obj\\",
         "projectStyle": "PackageReference",
         "crossTargeting": true,
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\Adi.Muff\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Users\\adrian.muff\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -88,12 +84,26 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.AspNetCore.App.Ref",
+              "version": "[7.0.20, 7.0.20]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Ref",
+              "version": "[7.0.20, 7.0.20]"
+            },
+            {
+              "name": "Microsoft.WindowsDesktop.App.Ref",
+              "version": "[7.0.20, 7.0.20]"
+            }
+          ],
           "frameworkReferences": {
             "Microsoft.NETCore.App": {
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.304\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.306\\RuntimeIdentifierGraph.json"
         },
         "net48": {
           "targetAlias": "net48",
@@ -112,7 +122,7 @@
               "version": "[8.0.5, )"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.304\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.306\\RuntimeIdentifierGraph.json"
         }
       }
     }

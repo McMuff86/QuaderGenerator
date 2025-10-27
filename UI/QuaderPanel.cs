@@ -93,12 +93,30 @@ namespace QuaderGenerator.UI
             };
             _modeSelector.SelectedIndexChanged += OnModeChanged;
 
-            // Input fields
+            // Input fields with Enter key support for generation
             _lengthTextBox = new TextBox { PlaceholderText = "1.0" };
             _widthTextBox = new TextBox { PlaceholderText = "1.0" };
             _heightTextBox = new TextBox { PlaceholderText = "1.0" };
             _volumeTextBox = new TextBox { PlaceholderText = "1.0" };
             _surfaceAreaTextBox = new TextBox { PlaceholderText = "6.0" };
+
+            // Add Enter key handler for generation
+            Action<TextBox> generateOnEnter = (textBox) =>
+            {
+                textBox.KeyDown += (sender, e) =>
+                {
+                    if (e.Key == Keys.Enter)
+                    {
+                        OnGenerateButtonClick(sender, e);
+                    }
+                };
+            };
+
+            generateOnEnter(_lengthTextBox);
+            generateOnEnter(_widthTextBox);
+            generateOnEnter(_heightTextBox);
+            generateOnEnter(_volumeTextBox);
+            generateOnEnter(_surfaceAreaTextBox);
 
             // Labels
             _lengthLabel = new Label { Text = "Length (X):" };
@@ -120,7 +138,7 @@ namespace QuaderGenerator.UI
 
             // Buttons and status
             _generateButton = new Button { Text = "Generate Quader" };
-            _statusLabel = new Label { Text = "Select mode and enter values" };
+            _statusLabel = new Label { Text = "💡 Tip: Press Enter in any input field to generate", TextColor = Colors.Gray };
             _generateButton.Click += OnGenerateButtonClick;
             
             // Object info
@@ -136,7 +154,7 @@ namespace QuaderGenerator.UI
             {
                 Content = _objectInfoLabel,
                 Border = BorderType.Line,
-                Size = new Size(-1, 200) // Fixed height, width auto
+                Size = new Size(-1, -1) // Auto height, auto width - let it expand as needed
             };
             
             _refreshInfoButton = new Button { Text = "Refresh Info" };
@@ -204,8 +222,11 @@ namespace QuaderGenerator.UI
             mainLayout.AddSpace();
             var infoGroup = new GroupBox { Text = "Selected Object Info" };
             var infoLayout = new DynamicLayout { Padding = 5, Spacing = new Size(5, 5) };
-            infoLayout.AddRow(_objectInfoScrollable); // Scrollable container instead of label directly
-            
+
+            // Add scrollable with expanded row to allow it to grow
+            infoLayout.AddRow(_objectInfoScrollable);
+            infoLayout.AddRow(null); // This will allow the scrollable to expand
+
             // Button row
             var infoButtonLayout = new DynamicLayout { Spacing = new Size(5, 5) };
             infoButtonLayout.BeginHorizontal();
@@ -213,7 +234,7 @@ namespace QuaderGenerator.UI
             infoButtonLayout.Add(_generateCentroidButton);
             infoButtonLayout.EndHorizontal();
             infoLayout.AddRow(infoButtonLayout);
-            
+
             infoGroup.Content = infoLayout;
             mainLayout.AddRow(infoGroup);
 
@@ -238,7 +259,8 @@ namespace QuaderGenerator.UI
         private void OnModeChanged(object sender, EventArgs e)
         {
             UpdateInputFields();
-            _statusLabel.Text = "Mode changed - enter values";
+            _statusLabel.Text = "✓ Mode changed - enter values";
+            _statusLabel.TextColor = Colors.Green;
         }
 
         private void OnUnitChanged(object sender, EventArgs e)
@@ -256,9 +278,10 @@ namespace QuaderGenerator.UI
                     _currentUnit = UnitConverter.Unit.Meters;
                     break;
             }
-            
+
             UpdateInputFields();
-            _statusLabel.Text = $"Units changed to {UnitConverter.GetUnitSymbol(_currentUnit)}";
+            _statusLabel.Text = $"✓ Units changed to {UnitConverter.GetUnitSymbol(_currentUnit)}";
+            _statusLabel.TextColor = Colors.Green;
         }
 
         private void UpdateInputFields()
